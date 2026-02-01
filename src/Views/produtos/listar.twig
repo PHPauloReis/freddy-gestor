@@ -1,0 +1,69 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}
+    Listagem de Produtos
+{% endblock %}
+
+{% block content %}
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-4xl font-bold mb-4">Listagem de produtos</h1>
+            <a href="/produtos/cadastrar" class="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Cadastrar Novo Produto
+            </a>
+        </div>
+
+        <div>
+            {% if flashMessage %}
+
+                {% if flashMessage.type == 'success' %}
+                <div class="p-6 bg-green-200 border-2 border-green-500 text-green-700 rounded-2xl mb-6">
+                    {{ flashMessage.message }}
+                </div>
+                {% endif %}
+
+                {% if flashMessage.type == 'error' %}
+                <div class="p-6 bg-red-200 border-2 border-red-500 text-red-700 rounded-2xl mb-6">
+                    {{ flashMessage.message }}
+                </div>
+                {% endif %}
+
+            {% endif %}
+        </div>
+
+        <ul>
+            {% for produto in produtos %}
+                <li class="flex items-center gap-4 p-6 border-b border-gray-200 hover:bg-gray-100">
+                    <img src="{{ produto.foto_path ? produto.foto_path : 'https://placehold.co/150x150' }}" alt="{{ produto.titulo }}" class="w-32 h-32 object-cover rounded-lg" />
+                    <a href="produtos/{{ produto.id }}">
+                        {{ produto.id }} - {{ produto.titulo }} - R$ {{ produto.preco|number_format(2, ',', '.') }}<br />
+                        Criado em: {{ produto.data_criacao.format('d/m/Y H:i:s') }} | Atualizado em: {{ produto.data_atualizacao.format('d/m/Y H:i:s') }}
+                    </a>
+                    <a href="produtos/editar/{{ produto.id }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Editar</a>
+                    <button onclick="excluirProduto({{ produto.id }})" type="button" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Excluir</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="my-6 flex justify-center space-x-2">
+        {% for pagina in 1..totalDePaginas %}
+            <a href="/produtos?pagina={{ pagina }}" class="px-4 py-2 rounded-lg {% if pagina == paginaAtual %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %}">
+                {{ pagina }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <form method="post" action="/produtos/excluir" id="form-excluir-produto" class="hidden">
+        <input type="hidden" name="produto_id" id="produto_id" value="">
+    </form>
+
+    <script>
+        function excluirProduto(produtoId) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                document.getElementById('produto_id').value = produtoId;
+                document.getElementById('form-excluir-produto').submit();
+            }
+        }
+    </script>
+
+{% endblock %}

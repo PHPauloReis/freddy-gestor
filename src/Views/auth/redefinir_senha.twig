@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col">
+
+    <div class="min-h-[calc(100vh-12rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Logo/Header -->
+            <div class="text-center">
+                <div class="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Redefinir senha</h2>
+                <p class="text-gray-600">Crie uma nova senha segura para sua conta</p>
+            </div>
+
+            <!-- Reset Password Form -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+                <form action="/redefinir-senha" method="POST" class="space-y-6">
+                    <!-- CSRF Token -->
+                    <input type="hidden" name="csrf_token" value="{{ csrfToken }}">
+                    <input type="hidden" name="token" value="{{ token }}">
+
+                    <!-- Nova Senha -->
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nova senha
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required
+                                minlength="8"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 outline-none"
+                                placeholder="Mínimo 8 caracteres"
+                                autocomplete="new-password"
+                            >
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xs text-gray-500">
+                                <p class="font-semibold mb-1">Sua senha deve conter:</p>
+                                <ul class="space-y-1">
+                                    <li class="flex items-center gap-2">
+                                        <span id="length-check" class="text-red-500">✗</span>
+                                        <span>Pelo menos 8 caracteres</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span id="uppercase-check" class="text-red-500">✗</span>
+                                        <span>Uma letra maiúscula</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span id="lowercase-check" class="text-red-500">✗</span>
+                                        <span>Uma letra minúscula</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span id="number-check" class="text-red-500">✗</span>
+                                        <span>Um número</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmar Nova Senha -->
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Confirmar nova senha
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <input 
+                                type="password" 
+                                id="password_confirmation" 
+                                name="password_confirmation" 
+                                required
+                                minlength="8"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 outline-none"
+                                placeholder="Digite a senha novamente"
+                                autocomplete="new-password"
+                            >
+                        </div>
+                        <p id="password-match" class="mt-2 text-sm hidden"></p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button 
+                            type="submit" 
+                            id="submit-btn"
+                            disabled
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-gray-400 cursor-not-allowed transition-all duration-200"
+                        >
+                            <span class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Redefinir senha
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Back to Login -->
+                    <div class="text-center">
+                        <a 
+                            href="/login" 
+                            class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                            </svg>
+                            Voltar ao login
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('password_confirmation');
+        const submitBtn = document.getElementById('submit-btn');
+        const passwordMatch = document.getElementById('password-match');
+
+        // Validação de critérios de senha
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Verificar comprimento
+            const lengthCheck = document.getElementById('length-check');
+            if (password.length >= 8) {
+                lengthCheck.textContent = '✓';
+                lengthCheck.className = 'text-green-500';
+            } else {
+                lengthCheck.textContent = '✗';
+                lengthCheck.className = 'text-red-500';
+            }
+
+            // Verificar maiúscula
+            const uppercaseCheck = document.getElementById('uppercase-check');
+            if (/[A-Z]/.test(password)) {
+                uppercaseCheck.textContent = '✓';
+                uppercaseCheck.className = 'text-green-500';
+            } else {
+                uppercaseCheck.textContent = '✗';
+                uppercaseCheck.className = 'text-red-500';
+            }
+
+            // Verificar minúscula
+            const lowercaseCheck = document.getElementById('lowercase-check');
+            if (/[a-z]/.test(password)) {
+                lowercaseCheck.textContent = '✓';
+                lowercaseCheck.className = 'text-green-500';
+            } else {
+                lowercaseCheck.textContent = '✗';
+                lowercaseCheck.className = 'text-red-500';
+            }
+
+            // Verificar número
+            const numberCheck = document.getElementById('number-check');
+            if (/[0-9]/.test(password)) {
+                numberCheck.textContent = '✓';
+                numberCheck.className = 'text-green-500';
+            } else {
+                numberCheck.textContent = '✗';
+                numberCheck.className = 'text-red-500';
+            }
+
+            checkFormValidity();
+        });
+
+        // Validação de confirmação de senha
+        confirmInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword) {
+                if (password === confirmPassword) {
+                    passwordMatch.textContent = '✓ Senhas coincidem';
+                    passwordMatch.className = 'mt-2 text-sm text-green-600';
+                    passwordMatch.classList.remove('hidden');
+                    this.classList.remove('border-red-500');
+                    this.classList.add('border-green-500');
+                } else {
+                    passwordMatch.textContent = '✗ Senhas não coincidem';
+                    passwordMatch.className = 'mt-2 text-sm text-red-600';
+                    passwordMatch.classList.remove('hidden');
+                    this.classList.add('border-red-500');
+                    this.classList.remove('border-green-500');
+                }
+            } else {
+                passwordMatch.classList.add('hidden');
+                this.classList.remove('border-red-500', 'border-green-500');
+            }
+
+            checkFormValidity();
+        });
+
+        function checkFormValidity() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmInput.value;
+            
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const passwordsMatch = password === confirmPassword && password.length > 0;
+            
+            const isValid = hasLength && hasUppercase && hasLowercase && hasNumber && passwordsMatch;
+            
+            if (isValid) {
+                submitBtn.disabled = false;
+                submitBtn.className = 'w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 cursor-pointer';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.className = 'w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-gray-400 cursor-not-allowed transition-all duration-200';
+            }
+        }
+    </script>
+
+</body>
+</html>
