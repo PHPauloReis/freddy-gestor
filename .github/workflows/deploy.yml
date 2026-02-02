@@ -30,4 +30,4 @@ jobs:
             cd /var/www/freddy
             mkdir -p public/uploads storage
             composer install --no-dev --no-progress -a
-            chown -R www-data:www-data public/uploads storage
+            chown -R www-data:www-data .
