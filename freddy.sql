@@ -59,11 +59,6 @@ INSERT INTO produtos (titulo, descricao, preco) VALUES
 ('Teclado Mecânico HyperX', 'Teclado Mecânico HyperX Alloy FPS Pro com switches Cherry MX Blue, layout ABNT2', 399.99),
 ('Monitor LG 24 Polegadas', 'Monitor LG 24 polegadas Full HD, IPS, 75Hz, HDMI, VGA', 699.99);
 
--- Criar usuário específico para a aplicação (caso não exista)
-CREATE USER IF NOT EXISTS 'freddy_user'@'%' IDENTIFIED BY 'freddy_pass';
-GRANT ALL PRIVILEGES ON freddy_db.* TO 'freddy_user'@'%';
-FLUSH PRIVILEGES;
-
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
