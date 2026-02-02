@@ -1,0 +1,32 @@
+name: "Deploy para Digital Ocean"
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Baixar o código"
+        uses: actions/checkout@v4
+
+      - name: "Copiar arquivos para a Digital Ocean"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "."
+          target: "/var/www/freddy"
+
+      - name: "Build da aplicação"
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/freddy
+            composer install --no-dev --no-progress -a
+            chown -R www-data:www-data public/uploads storage
